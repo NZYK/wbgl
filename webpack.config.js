@@ -9,24 +9,33 @@ module.exports = {
             {
                 test: /\.ts$/,
                 use: 'ts-loader',
-                exclude: /node_modules/,
+                exclude: /node_modules/
             },
             {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader'],
+                exclude: /node_modules/
             },
+            {
+                test: /\.(glsl|vs|fs|frag|vert)$/,
+                use: [
+                    'raw-loader',
+                    'glslify-loader'
+                ],
+                exclude: /node_modules/
+            }
         ],
     },
     resolve: {
-        extensions: ['.ts', '.js'],
+        extensions: ['.ts', '.js', '.glsl', '.frag', '.vert']
     },
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'dist')
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './dist/index.html',
+            template: './src/index.html'
         }),
     ],
     devServer: {
