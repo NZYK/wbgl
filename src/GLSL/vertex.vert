@@ -1,6 +1,10 @@
-attribute vec3 position;
-uniform   mat4 mvpMatrix;
+#version 300 es
 
-void main(void){
-    gl_Position = mvpMatrix * vec4(position, 1.0);
+in vec3 position;
+in vec4 color;
+
+out vec4 vColor;
+void main() {
+    vColor = color;
+    gl_Position = vec4(position, 1.0);
 }
