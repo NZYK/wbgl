@@ -11,8 +11,10 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/gl-matrix": "^3.2.0",
     "@types/webgl2": "^0.0.11",
     "css-loader": "^7.1.2",
+    "gl-matrix": "^3.4.3",
     "glslify-loader": "^2.0.0",
     "html-webpack-plugin": "^5.6.0",
     "raw-loader": "^4.0.2",

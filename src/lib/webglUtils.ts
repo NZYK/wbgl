@@ -54,15 +54,55 @@ export function createProgram(
 export function createBuffer(
     gl: WebGLRenderingContext | WebGL2RenderingContext,
     bufferType: GLenum,
-    dataArray: Float32Array | Uint16Array | null,
-    drawType: GLenum
+    dataArray: Float32Array | Uint16Array | null = null,
+    usage: GLenum = gl.STATIC_DRAW
 ): WebGLBuffer | null{
     const buffer = gl.createBuffer();
     if (!buffer) throw new Error("Failed to create buffer");
     gl.bindBuffer(bufferType, buffer);
     // データのイニシャライズ
-    if (dataArray) gl.bufferData(bufferType, dataArray, drawType);
+    if (dataArray) gl.bufferData(bufferType, dataArray, usage);
     gl.bindBuffer(bufferType, null);
     return buffer;
 }
 
+export type WebGLAttributes = Array<WebGLAttribute>;
+export type WebGLAttribute = {
+    name: string;
+    size: number;
+    type: GLenum;
+    byteSize: number;
+};
+
+// VertexAttributeが多くなると管理が煩雑になるのでこれをVAOでまとめる
+// VAOはwebGL2からの機能なのでここでは gl: WebGL2RenderingContextとする
+export function createVAO(
+    gl: WebGL2RenderingContext,
+    program: WebGLProgram,
+    buffer: WebGLBuffer,
+    attributes: WebGLAttributes,
+    stride: number,
+    dataArray: Float32Array | Uint16Array | null = null,
+    usage: GLenum = gl.STATIC_DRAW
+) {
+    const vao = gl.createVertexArray();
+    if (!vao) throw new Error("Failed to create vao");
+    gl.bindVertexArray(vao);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+    let offset = 0;
+    for(const attribute of attributes) {
+        const attrLocation = gl.getAttribLocation(program, attribute.name);
+        gl.enableVertexAttribArray(attrLocation);
+        gl.vertexAttribPointer(attrLocation, attribute.size, attribute.type, false, stride, offset);
+        offset += attribute.byteSize;
+    }
+
+    if(dataArray !== null) {
+        gl.bufferData(gl.ARRAY_BUFFER, dataArray, usage);
+    }
+
+    gl.bindVertexArray(null);
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    return vao;
+}
