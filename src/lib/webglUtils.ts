@@ -49,6 +49,32 @@ export function createProgram(
         alert(gl.getProgramInfoLog(program));
     }
 }
+// TransformFeedbackはWebGL2でしか使えないので注意
+export function createProgramWithFeedback(
+    gl: WebGL2RenderingContext,
+    vertexShader: WebGLShader,
+    fragmentShader: WebGLShader,
+    feedbackVaryings: Array<string> = []
+): WebGLProgram | null{
+    let program = gl.createProgram();
+    if (!program) throw new Error("Failed to create program");
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+
+    // ここでトランスフォームフィードバックを使用することを宣言
+    if(feedbackVaryings.length !== 0) {
+        gl.transformFeedbackVaryings(program, feedbackVaryings, gl.INTERLEAVED_ATTRIBS);
+    }
+
+    gl.linkProgram(program);
+    // シェーダのリンクが正しく行なわれたかチェック
+    if (gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        gl.useProgram(program);
+        return program;
+    } else {
+        alert(gl.getProgramInfoLog(program));
+    }
+}
 
 // バッファを作成して初期化する
 export function createBuffer(
