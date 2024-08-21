@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<script defer src="bundle.js"></script></head>
+<body>
+    <div><span id="particle-num"></span> particles　　<span id="fps"></span></div>
+    <form>
+        <select id="computer">
+            <option value="GPU">GPU</option>
+            <option value="CPU">CPU</option>
+        </select>
+        <input type="number" id="particles" placeholder="particle_number" value="500">
+        <button type="button" id="restartBtn">Restart Loop</button>
+    </form>
+    <canvas id="canvas"></canvas>
+    <script src="bundle.js"></script>
+</body>
+</html>
